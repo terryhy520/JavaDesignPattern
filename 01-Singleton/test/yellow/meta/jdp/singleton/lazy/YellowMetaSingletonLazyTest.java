@@ -14,7 +14,7 @@ public class YellowMetaSingletonLazyTest {
         int memoryAddress = System.identityHashCode(instance0);
         for (int i = 0; i < 50; i++) {
             YellowMetaSingletonLazy instance = YellowMetaSingletonLazy.getInstance();
-            assertTrue(instance==instance0);
+            assertTrue(instance == instance0);
             assertEquals(System.identityHashCode(instance), memoryAddress);
         }
     }

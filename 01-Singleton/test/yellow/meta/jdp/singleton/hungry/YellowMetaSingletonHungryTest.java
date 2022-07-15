@@ -13,7 +13,7 @@ public class YellowMetaSingletonHungryTest {
         int memoryAddress = System.identityHashCode(instance0);
         for (int i = 0; i < 50; i++) {
             YellowMetaSingletonHungry instance = YellowMetaSingletonHungry.getInstance();
-            assertTrue(instance==instance0);
+            assertTrue(instance == instance0);
             assertEquals(System.identityHashCode(instance), memoryAddress);
         }
     }
