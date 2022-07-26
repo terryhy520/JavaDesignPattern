@@ -9,24 +9,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class YellowMetaSingletonLazyTest {
-    // 野鹿先生网站的总页面数为5个
-    private static final int PAGE_NUM = 500;
+public class YellowMetaSingletonLazySafeTest {
+    // 野鹿先生网站的总页面数为 PAGE_NUM 个
+    private static final int PAGE_NUM = 50000;
     @Test
     public void getInstance() {
-        YellowMetaSingletonLazy [] Global = new YellowMetaSingletonLazy[PAGE_NUM];
+        YellowMetaSingletonLazySafe [] Global = new YellowMetaSingletonLazySafe[PAGE_NUM];
         try(Cost cost = new Cost()) {
         for (int i = 0; i < PAGE_NUM; i++) {
             int finalI = i;
             ((Runnable) () -> {
-                YellowMetaSingletonLazy instance = YellowMetaSingletonLazy.getInstance();
+                YellowMetaSingletonLazySafe instance = YellowMetaSingletonLazySafe.getInstance();
                 Global[finalI] = instance;
             }).run();
-
         }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
         for (int i = 0; i < PAGE_NUM - 1; i++) {
             // 期待每个页面获取到的是同一个实例
             assertTrue(Global[i] == Global[i+1]);
@@ -39,17 +38,23 @@ public class YellowMetaSingletonLazyTest {
     @Test
     public void countOneTime() {
         int accessTimes = 10;
-        // 模拟 PAGE_NUM 个页面的访问
+        // 模拟5个页面的访问
         for (int i = 0; i < PAGE_NUM; i++) {
             ((Runnable) () -> {
-                YellowMetaSingletonLazy instance = YellowMetaSingletonLazy.getInstance();
-                // 模拟独立访问每个页面 accessTimes 次
+                YellowMetaSingletonLazySafe instance = YellowMetaSingletonLazySafe.getInstance();
+                // 模拟独立访问每个页面10次，访问时间间隔0~1000之间的随机毫秒数
                 for (int j = 0; j < accessTimes; j++) {
+                    Random random = new Random();
+                    try {
+                        Thread.sleep(random.nextInt(1000));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     instance.countOneTime();
                 }
             }).run();
         }
-        // PAGE_NUM 个页面各自被访问了 accessTimes 次，预期网址当前访问总次数为 PAGE_NUM * accessTimes 次
-        assertEquals(YellowMetaSingletonLazy.getInstance().getCounts(), PAGE_NUM * accessTimes);
+        // 5个页面各自被访问了10次，预期网址当前访问总次数为50次
+        assertEquals(YellowMetaSingletonLazySafe.getInstance().getCounts(), 50);
     }
 }

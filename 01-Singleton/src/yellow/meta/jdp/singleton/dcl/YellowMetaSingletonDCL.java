@@ -1,17 +1,16 @@
-package yellow.meta.jdp.singleton.lazy;
+package yellow.meta.jdp.singleton.dcl;
 
 
-
-public class YellowMetaSingletonLazy {
+public class YellowMetaSingletonDCL {
 
     // 懒汉模式的单例模式实例
-    private static YellowMetaSingletonLazy instance;
+    private static YellowMetaSingletonDCL instance;
 
     // 网址的总访问次数
     private int visitCounts;
 
     // 构造函数为 private，确保该类不会再其他地方被实例化
-    private YellowMetaSingletonLazy() {
+    private YellowMetaSingletonDCL() {
         visitCounts = 0;
     }
 
@@ -19,9 +18,13 @@ public class YellowMetaSingletonLazy {
      * getInstance 提供静态全局访问点，方便使用者调用获取单例模式的唯一实例
      * @return 返回单例模式的唯一实例
      */
-    public static YellowMetaSingletonLazy getInstance() {
+    public static YellowMetaSingletonDCL getInstance() {
         if (instance == null) {
-            instance = new YellowMetaSingletonLazy();
+            synchronized (YellowMetaSingletonDCL.class) {
+                if (instance == null) {
+                    instance = new YellowMetaSingletonDCL();
+                }
+            }
         }
         return instance;
     }
@@ -30,7 +33,7 @@ public class YellowMetaSingletonLazy {
      * countOneTime 出现一次页面访问，则增加一次访问计数
      */
     public void countOneTime() {
-        synchronized(YellowMetaSingletonLazy.class) {
+        synchronized(yellow.meta.jdp.singleton.lazy.YellowMetaSingletonLazy.class) {
             visitCounts++;
         }
     }
