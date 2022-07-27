@@ -1,9 +1,8 @@
 package yellow.meta.jdp.singleton.lazy;
 
+import main.java.yellow.meta.jdp.singleton.lazy.YellowMetaSingletonLazy;
+import main.java.yellow.meta.jdp.util.Cost;
 import org.junit.Test;
-import yellow.meta.jdp.util.Cost;
-
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,27 +10,28 @@ import static org.junit.Assert.assertTrue;
 
 public class YellowMetaSingletonLazyTest {
     // 野鹿先生网站的总页面数为5个
-    private static final int PAGE_NUM = 500;
+    private static final int PAGE_NUM = 50000;
+
     @Test
     public void getInstance() {
-        YellowMetaSingletonLazy [] Global = new YellowMetaSingletonLazy[PAGE_NUM];
-        try(Cost cost = new Cost()) {
-        for (int i = 0; i < PAGE_NUM; i++) {
-            int finalI = i;
-            ((Runnable) () -> {
-                YellowMetaSingletonLazy instance = YellowMetaSingletonLazy.getInstance();
-                Global[finalI] = instance;
-            }).run();
+        YellowMetaSingletonLazy[] Global = new YellowMetaSingletonLazy[PAGE_NUM];
+        try (Cost cost = new Cost("Lazy")) {
+            for (int i = 0; i < PAGE_NUM; i++) {
+                int finalI = i;
+                ((Runnable) () -> {
+                    YellowMetaSingletonLazy instance = YellowMetaSingletonLazy.getInstance();
+                    Global[finalI] = instance;
+                }).run();
 
-        }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         for (int i = 0; i < PAGE_NUM - 1; i++) {
             // 期待每个页面获取到的是同一个实例
-            assertTrue(Global[i] == Global[i+1]);
+            assertTrue(Global[i] == Global[i + 1]);
             // 此处比通过比较内存地址是否相等判断是否同一个实例
-            assertEquals(System.identityHashCode(Global[i]),System.identityHashCode(Global[i+1]));
+            assertEquals(System.identityHashCode(Global[i]), System.identityHashCode(Global[i + 1]));
         }
     }
 
