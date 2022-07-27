@@ -1,5 +1,6 @@
 package yellow.meta.jdp.singleton.hungry;
 
+import main.java.yellow.meta.jdp.singleton.hungry.YellowMetaSingletonHungry;
 import org.junit.Test;
 
 import java.util.Random;
@@ -11,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class YellowMetaSingletonHungryTest {
     // 野鹿先生网站的总页面数为5个
     private static final int PAGE_NUM = 5;
+
     @Test
     public void getInstance() {
         YellowMetaSingletonHungry instance0 = YellowMetaSingletonHungry.getInstance();
@@ -36,7 +38,7 @@ public class YellowMetaSingletonHungryTest {
                 for (int j = 0; j < accessTimes; j++) {
                     Random random = new Random();
                     try {
-                        Thread.sleep(random.nextInt(1000));
+                        Thread.sleep(random.nextInt(10));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

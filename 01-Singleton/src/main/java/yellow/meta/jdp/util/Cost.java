@@ -1,10 +1,13 @@
-package yellow.meta.jdp.util;
+package main.java.yellow.meta.jdp.util;
 
 import java.io.Closeable;
 
-public class Cost implements AutoCloseable{
+public class Cost implements AutoCloseable {
     private long start;
-    public Cost() {
+    private String taskName;
+
+    public Cost(String taskName) {
+        this.taskName = taskName;
         start = System.currentTimeMillis();
     }
 
@@ -54,6 +57,6 @@ public class Cost implements AutoCloseable{
      */
     @Override
     public void close() throws Exception {
-        System.out.println("cost time: " + (System.currentTimeMillis() - start) + " ms");
+        System.out.println(taskName + " cost time: " + (System.currentTimeMillis() - start) + " ms");
     }
 }
